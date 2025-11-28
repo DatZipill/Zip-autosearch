@@ -12,34 +12,18 @@
 using namespace std;
 
 int mark[1000] = {0};
+vector<string> allWords;
 
 string word() {
-	string line;
-	vector<string> allWords;
-	ifstream file("keywords.txt");
-	if (!file.is_open()) {
-		cout << "Khong the mo file" << endl;
-		return "";
-	}
-	while (getline(file, line)) {
-		if (!line.empty()) {
-			stringstream ss(line);
-			string word;
-			while (ss >> word) {
-				allWords.push_back(word);
-			}
-		}
-	}
-	file.close();
 	if (allWords.empty()) {
 		cout << "File khong co tu khoa nao" << endl;
 		return "";
 	}
-	srand(time(0));
 	int sum = allWords.size();
 	int rd = rand() % sum;
 	while (mark[rd]) {
-		rd = rand() % sum;
+		rd++;
+		if (rd == sum) rd = 0;
 	}
 	mark[rd] = 1;
 	return allWords[rd];
@@ -75,12 +59,28 @@ void search() {
 }
 
 int main() {
+	srand(time(0));
+	string line;
+	ifstream file("keywords.txt");
+	if (!file.is_open()) {
+		cout << "Khong the mo file" << endl;
+	}
+	while (getline(file, line)) {
+		if (!line.empty()) {
+			stringstream ss(line);
+			string word;
+			while (ss >> word) {
+				allWords.push_back(word);
+			}
+		}
+	}
+	file.close();
 	int n;
 	cout << "Ban muon tim kiem bao nhieu lan: ";
 	cin >> n;
 	for (int i = 0; i < n; i++) {
 		search();
-		int rd = (rand() % 11) * 1000;
+		int rd = (rand() % 6 + 5) * 1000;
 		Sleep(rd);
 	}
 }
